@@ -92,4 +92,14 @@ protocol DiskCacheProtocol:NSObjectProtocol{
     
     /// -set:forKey: is equivalent to -setObject:forKey: except that the value is converted from a Codable
     func set<T:Codable>(_ value:T,forKey defaultName: String) throws
+    
+    
+    /// -set:forKey: is equivalent to -setObject:forKey: except that the value is converted from a DataConvertible
+    func set<T:DataConvertible>(_ value:T,
+                                forKey defaultName: String)
+    
+    
+    func get<T:DataConvertible>(_ type:T.Type,
+                                forKey defaultName: String) -> T?
+    
 }
