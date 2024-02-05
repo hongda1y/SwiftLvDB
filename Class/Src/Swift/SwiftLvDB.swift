@@ -238,6 +238,28 @@ final public class SwiftLvDB: NSObject {
         self.memoryCache.setValue(value, defaultName)
         try self.diskCache.set(value, forKey: defaultName)
     }
+    
+    //DataConvertible
+    public func set<T:DataConvertible>(_ value:T,
+                                       forKey defaultName: String) {
+        self.memoryCache.setValue(value, defaultName)
+        self.diskCache.set(value, forKey: defaultName)
+    }
+    
+    public func get<T:DataConvertible>(_ type: T.Type,
+                                       forKey defaultName: String) -> T? {
+        
+        if let value = self.memoryCache.getValue(defaultName) as? T {
+            return value
+        }
+        
+        if let value = self.diskCache.get(T.self,forKey: defaultName) {
+            self.memoryCache.setValue(value, defaultName)
+            return value
+        }
+        
+        return nil
+    }
 }
 
 
