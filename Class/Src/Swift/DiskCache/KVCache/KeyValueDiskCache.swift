@@ -232,7 +232,17 @@ extension KeyValueDiskCache:DiskCacheProtocol{
     }
     
     
+    func set<T:DataConvertible>(_ value: T, forKey defaultName: String) {
+        self.set(value.data, forKey: defaultName)
+    }
 
+
+    func get<T>(_ type: T.Type, forKey defaultName: String) -> T? where T : DataConvertible {
+        guard let data = self.data(forKey: defaultName) else {
+            return nil
+        }
+        return data.to(type: T.self)
+    }
 }
 
 //Mark 基础类型的Byte转化
@@ -249,11 +259,11 @@ extension Data {
 }
 
 
-private protocol DataConvertible {
+public protocol DataConvertible {
     var data: Data { get }
 }
 
-private extension DataConvertible {
+public extension DataConvertible {
     var data: Data {
         var value = self
         return Data(buffer: UnsafeBufferPointer(start: &value, count: 1))
@@ -264,3 +274,4 @@ extension Int : DataConvertible { }
 extension Float : DataConvertible { }
 extension Double : DataConvertible { }
 extension Bool : DataConvertible { }
+
